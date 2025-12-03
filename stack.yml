@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+
+  gateway:
+    image: ${HUB_USER}/market-gateway:latest
+    ports:
+      - "9000:9000"
+    networks:
+      - shopnet
+    environment:
+      ADDR: ":9000"
+      AUTH_URL: "http://user_service:8001"
+      PRODUCTS_URL: "http://product_service:8002"
+      JWT_SECRET: "GwAFFwebRtOI0Ognmejaswjk+o3zOP3XJ6o+/FwtfsOuqXzyhTi4baQGUbe8HNEzWPPSS6/2GzJWGlVwDjC1HA"
+      CORS_ALLOWED_ORIGINS: "*"
+      ROUTES_FILE: "/app/configs/routes.yaml"
+    deploy:
+      replicas: 2
+
+  user_service:
+    image: ${HUB_USER}/market-user_service:latest
+    networks:
+      - shopnet
+    environment:
+      HTTP_PORT: ":8001"
+      DB_HOST: "market_user_db"
+      DB_PORT: "5432"
+      DB_USER: "postgres"
+      DB_PASSWORD: "1111"
+      DB_NAME: "user_db"
+      DB_SSLMODE: "disable"
+      JWT_SECRET: "GwAFFwebRtOI0Ognmejaswjk+o3zOP3XJ6o+/FwtfsOuqXzyhTi4baQGUbe8HNEzWPPSS6/2GzJWGlVwDjC1HA"
+
+  product_service:
+    image: ${HUB_USER}/market-product_service:latest
+    networks:
+      - shopnet
+    environment:
+      HTTP_PORT: ":8002"
+      DB_HOST: "market_product_db"
+      DB_PORT: "5432"
+      DB_USER: "postgres"
+      DB_PASSWORD: "1111"
+      DB_NAME: "product_db"
+      DB_SSLMODE: "disable"
+
+  market_user_db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1111"
+      POSTGRES_DB: "user_db"
+    networks:
+      - shopnet
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+
+  market_product_db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1111"
+      POSTGRES_DB: "product_db"
+    networks:
+      - shopnet
+    volumes:
+      - product_db_data:/var/lib/postgresql/data
+
+networks:
+  shopnet:
+    external: true
+
+volumes:
+  user_db_data:
+  product_db_data:

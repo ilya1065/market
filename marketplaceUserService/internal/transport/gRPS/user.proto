@@ -1,0 +1,4 @@
+syntax= "proto3";
+package user;
+option go_package = "internal/transport/gRPS/gen";
+import "google/protobuf/timestamp.proto";

@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "internal/transport/gRPS/gen";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// gRPC сервис
+service ProductService {
+  rpc Create(CreateProductRequest) returns (CreateProductResponse) {
+    option (google.api.http) = {
+      post: "/products"
+      body: "*"
+    };
+  }
+
+  rpc List(ListProductRequest) returns (ListProductResponse) {
+    option (google.api.http) = {
+      get: "/products"
+    };
+  }
+
+  rpc GetByID(GetProductByIDRequest) returns (GetProductByIDResponse) {
+    option (google.api.http) = {
+      get: "/products/{id}"
+    };
+  }
+
+  rpc Update(UpdateProductRequest) returns (UpdateProductResponse) {
+    option (google.api.http) = {
+      put: "/products/{id}"
+      body: "*"
+    };
+  }
+
+  rpc Delete(DeleteProductRequest) returns (DeleteProductResponse) {
+    option (google.api.http) = {
+      delete: "/products/{id}"
+    };
+  }
+}
+
+message Product {
+  uint64 id = 1;
+  double price = 2;
+  string name = 3;
+  string description = 4;
+  int32 stock = 5;
+  string image_url = 6;
+  int32 category_id = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message CreateProductRequest {
+  double price = 1;
+  string name = 2;
+  string description = 3;
+  int32 stock = 4;
+  string image_url = 5;
+  int32 category_id = 6;
+}
+
+message CreateProductResponse {
+  bool success = 1;
+  string message = 2;
+  Product product = 3;
+}
+
+message ListProductRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message ListProductResponse {
+  repeated Product products = 1;
+}
+
+message GetProductByIDRequest {
+  uint64 id = 1;
+}
+
+message GetProductByIDResponse {
+  Product product = 1;
+}
+
+message UpdateProductRequest {
+  uint64 id = 1;
+  double price = 2;
+  string name = 3;
+  string description = 4;
+  int32 stock = 5;
+  string image_url = 6;
+  int32 category_id = 7;
+}
+
+message UpdateProductResponse {
+  bool success = 1;
+  string message = 2;
+  Product product = 3;
+}
+
+message DeleteProductRequest {
+  uint64 id = 1;
+}
+
+message DeleteProductResponse {
+  bool success = 1;
+  string message = 2;
+}

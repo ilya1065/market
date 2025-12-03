@@ -1,0 +1,35 @@
+syntax= "proto3";
+package product;
+option go_package = "internal/transport/gRPS/gen";
+import "google/protobuf/timestamp.proto";
+
+service ProductService{
+  rpc Create(CreateProductRequest) returns( CreateProductResponse);
+}
+
+message CreateProductResponse {
+  bool success =1;
+  string message = 2;
+  Product product = 3;
+}
+
+message CreateProductRequest{
+  double price = 1;
+  string name = 2;
+  string description = 3;
+  int32 stock = 4;
+  string image_url = 5;
+  int32 category_id = 6;
+}
+
+message Product {
+  uint64 id = 1;
+  double price = 2;
+  string name = 3;
+  string description = 4;
+  int32 stock = 5;
+  string image_url = 6;
+  int32 category_id = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}

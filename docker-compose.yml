@@ -1,0 +1,66 @@
+services:
+  gateway:
+    build: ./Getway_market
+    container_name: gateway
+    env_file:
+      - ./Getway_market/.env
+    ports:
+      - "9000:9000"
+    networks:
+      - shopnet
+    depends_on:
+      - user_service
+      - product_service
+
+  user_service:
+    build: ./marketplaceUserService
+    container_name: user_service
+    env_file:
+      - ./marketplaceUserService/.env
+    networks:
+      - shopnet
+    depends_on:
+      - user_db
+
+  product_service:
+    build: ./Product_Service
+    container_name: product_service
+    env_file:
+      - ./Product_Service/.env
+    networks:
+      - shopnet
+    depends_on:
+      - product_db
+
+  user_db:
+    image: postgres:16
+    container_name: user_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: user_db
+    volumes:
+      - user_data:/var/lib/postgresql/data
+    networks:
+      - shopnet
+
+  product_db:
+    image: postgres:16
+    container_name: product_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: product_service
+    volumes:
+      - product_data:/var/lib/postgresql/data
+    networks:
+      - shopnet
+
+networks:
+  shopnet:
+
+volumes:
+  user_data:
+  product_data:
+
+

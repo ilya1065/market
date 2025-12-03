@@ -1,0 +1,29 @@
+services:
+  auth:
+    base_url: "http://market_user_service:8001"
+  products:
+    base_url: "http://market_product_service:8002"
+
+routes:
+  - prefix: "/api/auth"
+    service: "auth"
+    auth_required: false
+    rules:
+      - { method: "POST", in: "/api/auth/register", out: "/register" }
+      - { method: "POST", in: "/api/auth/login", out: "/login" }
+
+  - prefix: "/api/users"
+    service: "auth"
+    auth_required: true
+    rules:
+      - { method: "GET", in: "/api/users/me", out: "/me" }
+
+  - prefix: "/api/products"
+    service: "products"
+    auth_required: true
+    rules:
+      - { method: "GET", in: "/api/products", out: "/list" }
+      - { method: "POST", in: "/api/products", out: "/create" }
+      - { method: "GET", in: "/api/products/:id", out: "/product?id=:id" }
+      - { method: "PUT", in: "/api/products/:id", out: "/update/:id" }
+      - { method: "DELETE", in: "/api/products/:id", out: "/delete/:id" }
