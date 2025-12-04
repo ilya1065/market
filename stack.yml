@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   gateway:
-    image: ${HUB_USER}/market-gateway:latest
+    image: ${DOCKER_USER}/market-gateway:latest
     ports:
       - "9000:9000"
     networks:
@@ -19,7 +19,7 @@ services:
       replicas: 2
 
   user_service:
-    image: ${HUB_USER}/market-user_service:latest
+    image: ${DOCKER_USER}/market-user_service:latest
     networks:
       - shopnet
     environment:
@@ -33,7 +33,7 @@ services:
       JWT_SECRET: "GwAFFwebRtOI0Ognmejaswjk+o3zOP3XJ6o+/FwtfsOuqXzyhTi4baQGUbe8HNEzWPPSS6/2GzJWGlVwDjC1HA"
 
   product_service:
-    image: ${HUB_USER}/market-product_service:latest
+    image: ${DOCKER_USER}/market-product_service:latest
     networks:
       - shopnet
     environment:
